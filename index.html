@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Симулятор Казино</title>
+    <style>
+        body {
+            margin: 0;
+            background: linear-gradient(to bottom, #1a1a1a, #2a2a2a);
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-y: auto;
+        }
+        #casino-container {
+            text-align: center;
+            width: 90%;
+            max-width: 900px;
+            padding: 20px 0;
+        }
+        h1 {
+            font-size: clamp(24px, 5vw, 48px);
+            color: #ffd700;
+            text-shadow: 0 0 10px #ffd700;
+            margin-bottom: 15px;
+        }
+        #menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .menu-button {
+            padding: 10px 20px;
+            font-size: clamp(14px, 3vw, 18px);
+            background: #ffd700;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .menu-button:hover {
+            background: #ffeb3b;
+            transform: scale(1.05);
+        }
+        #slot-machine, #shop, #about {
+            display: none;
+            background: #333;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #ffd700;
+        }
+        #slot-machine.active, #shop.active, #about.active {
+            display: block;
+        }
+        .reel {
+            width: clamp(60px, 15vw, 120px);
+            height: clamp(60px, 15vw, 120px);
+            background: #fff;
+            color: #000;
+            font-size: clamp(20px, 8vw, 50px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        #spin-button {
+            margin-top: 15px;
+            padding: 8px 16px;
+            font-size: clamp(14px, 3vw, 18px);
+            background: #ff4500;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #spin-button:hover {
+            background: #ff6347;
+        }
+        #balance {
+            font-size: clamp(18px, 4vw, 24px);
+            margin: 15px 0;
+            color: #00ffcc;
+        }
+        #shop-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        .shop-item {
+            background: #444;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .shop-item img {
+            width: 100%;
+            height: auto;
+            max-height: 120px;
+            object-fit: cover;
+        }
+        .shop-button {
+            background: #00ffcc;
+            color: #1a1a1a;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: clamp(12px, 2.5vw, 16px);
+        }
+        .shop-button:hover {
+            background: #00e6b8;
+        }
+
+        /* Медиа-запросы для улучшения адаптивности */
+        @media (max-width: 600px) {
+            .reel {
+                margin: 3px;
+            }
+            #menu {
+                flex-direction: column;
+                align-items: center;
+            }
+            .menu-button {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="casino-container">
+        <h1>Симулятор Казино</h1>
+        <div id="menu">
+            <button class="menu-button" onclick="showSection('slot-machine')">Играть в слоты</button>
+            <button class="menu-button" onclick="showSection('shop')">Магазин</button>
+            <button class="menu-button" onclick="showSection('about')">О казино</button>
+        </div>
+        <div id="balance">Баланс: $1000</div>
+
+        <div id="slot-machine">
+            <div style="display: flex; justify-content: center; flex-wrap: wrap;">
+                <div class="reel" id="reel1">?</div>
+                <div class="reel" id="reel2">?</div>
+                <div class="reel" id="reel3">?</div>
+            </div>
+            <button id="spin-button">Крутить ($10)</button>
+        </div>
+
+        <div id="shop">
+            <h2>Магазин</h2>
+            <div id="shop-items">
+                <!-- Машины -->
+                <div class="shop-item">
+                    <img src="car_bmw_x5.jpg" alt="BMW X5">
+                    <p>BMW X5 - $200000</p>
+                    <button class="shop-button" onclick="buyItem(200000)">Купить</button>
+                </div>
+                <div class="shop-item">
+                    <img src="car_tesla_s.jpg" alt="Tesla Model S">
+                    <p>Tesla Model S - $250000</p>
+                    <button class="shop-button" onclick="buyItem(250000)">Купить</button>
+                </div>
+                <div class="shop-item">
+                    <img src="car_porsche_911.jpg" alt="Porsche 911">
+                    <p>Porsche 911 - $30000</p>
+                    <button class="shop-button" onclick="buyItem(30000)">Купить</button>
+                </div>
+                <div class="shop-item">
+                    <img src="car_audi_r8.jpg" alt="Audi R8">
+                    <p>Audi R8 - $25000</p>
+                    <button class="shop-button" onclick="buyItem(25000)">Купить</button>
+                </div>
+                <div class="shop-item">
+                    <img src="car_mersedes_sclass.jpg" alt="Audi R8">
+                    <p>Mersedes Benz - $500000</p>
+                    <button class="shop-button" onclick="buyItem(500000)">Купить</button>
+                </div>
+                <div class="shop-item">
+                    <img src="car_cadillac.jpg" alt="Audi R8">
+                    <p>Cadillac - $80000</p>
+                    <button class="shop-button" onclick="buyItem(80000)">Купить</button>
+                </div>
+                <!-- Дома -->
+                <div class="shop-item">
+                    <img src="house_usa.jpg" alt="Дом в США">
+                    <p>Дом в США - $150000</p>
+                    <button class="shop-button" onclick="buyItem(150000)">Купить</button>
+                </div>
+                <div class="shop-item">
+                    <img src="house_altay.jpg" alt="Дом в США">
+                    <p>Дом в Алтае - $250000</p>
+                    <button class="shop-button" onclick="buyItem(250000)">Купить</button>
+                </div>
+                <div class="shop-item">
+                    <img src="flat_in_dubai.jpg" alt="Дом в США">
+                    <p>Квартира в Дубае - $800000</p>
+                    <button class="shop-button" onclick="buyItem(800000)">Купить</button>
+                </div>
+                <div class="shop-item">
+                    <img src="flat_in_Moscow_City.jpg" alt="Дом в США">
+                    <p>Квартира в Moscow City - $1000000</p>
+                    <button class="shop-button" onclick="buyItem(1000000)">Купить</button>
+                </div>
+                <!-- Земельные участки -->
+                <div class="shop-item">
+                    <img src="land_in_canada.jpg" alt="Земля в Канаде">
+                    <p>Недвижимость в Канаде - $14000</p>
+                    <button class="shop-button" onclick="buyItem(14000)">Купить</button>
+                </div>
+                <div class="shop-item">
+                    <img src="hurry_land.jpg" alt="Земля в Канаде">
+                    <p>Купить посевные поля в деревне - $17000</p>
+                    <button class="shop-button" onclick="buyItem(17000)">Купить</button>
+                </div>
+                <!-- Цепи -->
+                <div class="shop-item">
+                    <img src="golden_chain.jpg" alt="Золотая цепь">
+                    <p>Золотая цепь - $4000</p>
+                    <button class="shop-button" onclick="buyItem(4000)">Купить</button>
+                </div>
+                <!-- Часы -->
+                <div class="shop-item">
+                    <img src="watch_rolex.jpg" alt="Rolex Submariner">
+                    <p>Rolex - $8500</p>
+                    <button class="shop-button" onclick="buyItem(8500)">Купить</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="about">
+            <h2>О казино</h2>
+            <p>Добро пожаловать в Симулятор Казино! Здесь вы можете испытать удачу в слотах и потратить выигрыш на дома, землю, машины, цепи или часы. Шанс выиграть — 40%, так что играйте с умом!</p>
+        </div>
+    </div>
+
+    <script>
+        const symbols = ['🍒', '🍋', '🍊', '💎', '🔔'];
+        const reels = [
+            document.getElementById('reel1'),
+            document.getElementById('reel2'),
+            document.getElementById('reel3')
+        ];
+        const spinButton = document.getElementById('spin-button');
+        const balanceDisplay = document.getElementById('balance');
+        let balance = 1000;
+
+        function showSection(sectionId) {
+            document.querySelectorAll('#slot-machine, #shop, #about').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        function spinReels() {
+            if (balance < 10) {
+                alert('Недостаточно долларов!');
+                return;
+            }
+
+            balance -= 10;
+            balanceDisplay.textContent = `Баланс: $${balance}`;
+
+            let spins = 0;
+            const spinInterval = setInterval(() => {
+                reels.forEach(reel => {
+                    reel.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                });
+                spins++;
+                if (spins > 20) {
+                    clearInterval(spinInterval);
+                    checkWin();
+                }
+            }, 100);
+        }
+
+        function checkWin() {
+            const result = reels.map(reel => reel.textContent);
+            const isWin = Math.random() < 0.4; // 40% шанс выиграть
+            if (isWin && result[0] === result[1] && result[1] === result[2]) {
+                const win = 100;
+                balance += win;
+                balanceDisplay.textContent = `Баланс: $${balance}`;
+                alert(`Вы выиграли $${win}!`);
+            }
+        }
+
+        function buyItem(price) {
+            if (balance >= price) {
+                balance -= price;
+                balanceDisplay.textContent = `Баланс: $${balance}`;
+                alert('Покупка успешна!');
+            } else {
+                alert('Недостаточно долларов!');
+            }
+        }
+
+        spinButton.addEventListener('click', spinReels);
+        showSection('slot-machine'); // По умолчанию открыты слоты
+    </script>
+</body>
+</html>
