@@ -56,7 +56,7 @@
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
         }
-        #slot-machine, #shop, #about {
+        #slot-machine, #shop, #tasks, #about {
             display: none;
             background: rgba(255, 255, 255, 0.1);
             padding: 20px;
@@ -64,7 +64,7 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
         }
-        #slot-machine.active, #shop.active, #about.active {
+        #slot-machine.active, #shop.active, #tasks.active, #about.active {
             display: block;
         }
         .reel {
@@ -151,8 +151,37 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(255, 107, 107, 0.5);
         }
+        .task-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .task-button {
+            background: linear-gradient(45deg, #00c4cc, #7cffb2);
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: clamp(12px, 2.5vw, 16px);
+            box-shadow: 0 3px 10px rgba(0, 196, 204, 0.3);
+            transition: transform 0.2s;
+        }
+        .task-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 196, 204, 0.5);
+        }
+        .task-button:disabled {
+            background: grey;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
 
-        /* Медиа-запросы */
         @media (max-width: 600px) {
             .reel {
                 margin: 5px;
@@ -177,6 +206,7 @@
         <div id="menu">
             <button class="menu-button" onclick="showSection('slot-machine')">Играть в слоты</button>
             <button class="menu-button" onclick="showSection('shop')">Магазин</button>
+            <button class="menu-button" onclick="showSection('tasks')">Задания</button>
             <button class="menu-button" onclick="showSection('about')">О казино</button>
         </div>
         <div id="balance">Баланс: $1000</div>
@@ -193,7 +223,6 @@
         <div id="shop">
             <h2>Магазин</h2>
             <div id="shop-items">
-                <!-- Машины -->
                 <div class="shop-item">
                     <img src="car_bmw_x5.jpg" alt="BMW X5">
                     <p>BMW X5 - $200000</p>
@@ -224,7 +253,6 @@
                     <p>Cadillac - $80000</p>
                     <button class="shop-button" onclick="buyItem(80000)">Купить</button>
                 </div>
-                <!-- Дома -->
                 <div class="shop-item">
                     <img src="house_usa.jpg" alt="Дом в США">
                     <p>Дом в США - $150000</p>
@@ -245,7 +273,6 @@
                     <p>Квартира в Moscow City - $1000000</p>
                     <button class="shop-button" onclick="buyItem(1000000)">Купить</button>
                 </div>
-                <!-- Земельные участки -->
                 <div class="shop-item">
                     <img src="land_in_canada.jpg" alt="Недвижимость в Канаде">
                     <p>Недвижимость в Канаде - $14000</p>
@@ -256,13 +283,11 @@
                     <p>Посевные поля в деревне - $17000</p>
                     <button class="shop-button" onclick="buyItem(17000)">Купить</button>
                 </div>
-                <!-- Цепи -->
                 <div class="shop-item">
                     <img src="golden_chain.jpg" alt="Золотая цепь">
                     <p>Золотая цепь - $4000</p>
                     <button class="shop-button" onclick="buyItem(4000)">Купить</button>
                 </div>
-                <!-- Часы -->
                 <div class="shop-item">
                     <img src="watch_rolex.jpg" alt="Rolex">
                     <p>Rolex - $8500</p>
@@ -271,9 +296,31 @@
             </div>
         </div>
 
+        <div id="tasks">
+            <h2>Задания</h2>
+            <div id="task-list">
+                <div class="task-item">
+                    <span>Подписаться на @onecointon</span>
+                    <button class="task-button" onclick="completeTask('task1', 100)">Получить $100</button>
+                </div>
+                <div class="task-item">
+                    <span>Подписаться на @it2009</span>
+                    <button class="task-button" onclick="completeTask('task2', 100)">Получить $100</button>
+                </div>
+                <div class="task-item">
+                    <span>Подписаться на @itworld2022</span>
+                    <button class="task-button" onclick="completeTask('task3', 100)">Получить $100</button>
+                </div>
+                <div class="task-item">
+                    <span>Подписаться на @Safiyev_Marat</span>
+                    <button class="task-button" onclick="completeTask('task4', 100)">Получить $100</button>
+                </div>
+            </div>
+        </div>
+
         <div id="about">
             <h2>О казино</h2>
-            <p>Добро пожаловать в Симулятор Казино! Испытайте удачу в слотах и потратьте выигрыш на роскошные дома, машины, украшения или землю. Шанс на победу — 40%. Играйте с умом и наслаждайтесь!</p>
+            <p>Добро пожаловать в Симулятор Казино! Испытайте удачу в слотах и потратьте выигрыш на роскошные дома, машины, украшения или землю. Шанс на победу — 40%. Выполняйте задания для дополнительного заработка. Играйте с умом и наслаждайтесь!</p>
         </div>
     </div>
 
@@ -286,13 +333,20 @@
         ];
         const spinButton = document.getElementById('spin-button');
         const balanceDisplay = document.getElementById('balance');
-        let balance = 1000;
+        let balance = localStorage.getItem('casinoBalance') ? parseInt(localStorage.getItem('casinoBalance')) : 1000;
+
+        balanceDisplay.textContent = `Баланс: $${balance}`;
 
         function showSection(sectionId) {
-            document.querySelectorAll('#slot-machine, #shop, #about').forEach(section => {
+            document.querySelectorAll('#slot-machine, #shop, #tasks, #about').forEach(section => {
                 section.classList.remove('active');
             });
             document.getElementById(sectionId).classList.add('active');
+        }
+
+        function updateBalance() {
+            balanceDisplay.textContent = `Баланс: $${balance}`;
+            localStorage.setItem('casinoBalance', balance);
         }
 
         function spinReels() {
@@ -302,7 +356,7 @@
             }
 
             balance -= 10;
-            balanceDisplay.textContent = `Баланс: $${balance}`;
+            updateBalance();
             reels.forEach(reel => reel.classList.add('spinning'));
 
             let spins = 0;
@@ -325,7 +379,7 @@
             if (isWin && result[0] === result[1] && result[1] === result[2]) {
                 const win = 100;
                 balance += win;
-                balanceDisplay.textContent = `Баланс: $${balance}`;
+                updateBalance();
                 alert(`Вы выиграли $${win}!`);
             }
         }
@@ -333,15 +387,41 @@
         function buyItem(price) {
             if (balance >= price) {
                 balance -= price;
-                balanceDisplay.textContent = `Баланс: $${balance}`;
+                updateBalance();
                 alert('Покупка успешна!');
             } else {
                 alert('Недостаточно долларов!');
             }
         }
 
+        function completeTask(taskId, reward) {
+            const completedTasks = JSON.parse(localStorage.getItem('completedTasks') || '[]');
+            if (!completedTasks.includes(taskId)) {
+                balance += reward;
+                completedTasks.push(taskId);
+                localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
+                updateBalance();
+                updateTaskButtons();
+                alert(`Задание выполнено! Вы получили $${reward}`);
+            } else {
+                alert('Это задание уже выполнено!');
+            }
+        }
+
+        function updateTaskButtons() {
+            const completedTasks = JSON.parse(localStorage.getItem('completedTasks') || '[]');
+            document.querySelectorAll('.task-button').forEach((button, index) => {
+                const taskId = `task${index + 1}`;
+                if (completedTasks.includes(taskId)) {
+                    button.disabled = true;
+                    button.textContent = 'Выполнено';
+                }
+            });
+        }
+
         spinButton.addEventListener('click', spinReels);
         showSection('slot-machine');
+        updateTaskButtons();
     </script>
 </body>
 </html>
